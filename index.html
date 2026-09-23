@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub 风格个人主页 · 主页</title>
+  <!-- 使用系统字体，模拟 GitHub 的简洁风格 -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #0d1117;  /* GitHub 暗色背景 */
+      color: #c9d1d9;            /* 主要文字颜色 */
+      line-height: 1.5;
+      padding: 32px 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* 主容器 — 模仿 GitHub 个人主页宽度与间距 */
+    .profile-container {
+      max-width: 950px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ----- 头部区域 (头像 + 名字 + bio) ----- */
+    .profile-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 28px;
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 24px 28px;
+      transition: border-color 0.2s;
+    }
+
+    .profile-header:hover {
+      border-color: #484f58;
+    }
+
+    /* 头像 — 使用纯 CSS 绘制一个占位头像（或可替换为 img） */
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2dba4e, #1a7f37);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px #30363d;
+      font-size: 48px;
+      font-weight: 600;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+
+    /* 如果使用真实图片，可替换成 img 并添加 object-fit: cover */
+    .avatar-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 0 2px #30363d;
+      flex-shrink: 0;
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .profile-name {
+      font-size: 28px;
+      font-weight: 600;
+      color: #f0f6fc;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .profile-login {
+      font-size: 18px;
+      font-weight: 300;
+      color: #8b949e;
+      margin-bottom: 16px;
+    }
+
+    .profile-bio {
+      font-size: 16px;
+      color: #c9d1d9;
+      margin-bottom: 18px;
+      max-width: 550px;
+    }
+
+    .profile-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 14px;
+      color: #8b949e;
+      margin-bottom: 8px;
+    }
+
+    .profile-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 按钮组 — 关注、赞助等 */
+    .profile-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid;
+      transition: 0.2s;
+      text-decoration: none;
+      background-color: transparent;
+    }
+
+    .btn-primary {
+      background-color: #21262d;
+      border-color: #30363d;
+      color: #c9d1d9;
+    }
+
+    .btn-primary:hover {
+      background-color: #30363d;
+      border-color: #8b949e;
+    }
+
+    .btn-follow {
+      background-color: #238636;
+      border-color: #2ea043;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn-follow:hover {
+      background-color: #2ea043;
+    }
+
+    /* ----- 导航标签 (Overview, Repositories 等) ----- */
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 1px;
+      margin-bottom: 8px;
+    }
+
+    .nav-tab {
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8b949e;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.1s;
+      text-decoration: none;
+    }
+
+    .nav-tab.active {
+      color: #f0f6fc;
+      border-bottom-color: #f78166; /* GitHub 橙色下划线 */
+      font-weight: 600;
+    }
+
+    .nav-tab:hover:not(.active) {
+      color: #c9d1d9;
+      border-bottom-color: #484f58;
+    }
+
+    .counter {
+      background-color: #30363d;
+      border-radius: 20px;
+      font-size: 12px;
+      padding: 1px 8px;
+      color: #c9d1d9;
+      margin-left: 6px;
+    }
+
+    /* ----- 主要双栏布局 ----- */
+    .main-grid {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .sidebar {
+      flex: 1 1 240px;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .content-area {
+      flex: 3 1 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 卡片样式 (用于仓库、成就等) */
+    .card {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: #484f58;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f0f6fc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title a {
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+
+    .card-title a:hover {
+      text-decoration: underline;
+    }
+
+    /* 精选仓库列表 */
+    .repo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .repo-item {
+      border-bottom: 1px solid #21262d;
+      padding-bottom: 16px;
+    }
+
+    .repo-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .repo-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .repo-name a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    .repo-name a:hover {
+      text-decoration: underline;
+    }
+
+    .repo-description {
+      font-size: 14px;
+      color: #8b949e;
+      margin-bottom: 10px;
+      max-width: 90%;
+    }
+
+    .repo-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 12px;
+      color: #8b949e;
+      align-items: center;
+    }
+
+    .repo-language {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .language-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #f1e05a; /* JavaScript 黄 */
+    }
+
+    .language-color.python {
+      background-color: #3572A5;
+    }
+
+    .language-color.typescript {
+      background-color: #3178c6;
+    }
+
+    .language-color.html {
+      background-color: #e34c26;
+    }
+
+    .repo-stars, .repo-forks {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* 贡献图表 (简化版，模仿 GitHub 贡献块) */
+    .contribution-graph {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 12px;
+      justify-content: flex-start;
+    }
+
+    .contribution-day {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      background-color: #21262d;
+      transition: 0.1s;
+    }
+
+    .contribution-day.level-1 { background-color: #0e4429; }
+    .contribution-day.level-2 { background-color: #006d32; }
+    .contribution-day.level-3 { background-color: #26a641; }
+    .contribution-day.level-4 { background-color: #39d353; }
+
+    /* 动态/活动列表 */
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      color: #8b949e;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .activity-content {
+      color: #c9d1d9;
+    }
+
+    .activity-content a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    .activity-content a:hover {
+      text-decoration: underline;
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: #8b949e;
+      margin-top: 4px;
+    }
+
+    /* 成就卡片 */
+    .achievements {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .achievement-badge {
+      background-color: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #c9d1d9;
+    }
+
+    .badge-emoji {
+      font-size: 18px;
+    }
+
+    /* 组织头像 (侧边栏) */
+    .org-avatars {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .org-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background-color: #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      color: #c9d1d9;
+    }
+
+    /* 简单响应式 */
+    @media (max-width: 700px) {
+      .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
+      .avatar, .avatar-img {
+        width: 90px;
+        height: 90px;
+        font-size: 36px;
+      }
+      .sidebar {
+        flex: 1 1 100%;
+      }
+      .content-area {
+        flex: 1 1 100%;
+      }
+      .nav-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <!-- ======= 个人资料头部 ======= -->
+    <header class="profile-header">
+      <!-- 头像 — 使用纯CSS圆形+首字母，也可以换成 <img> -->
+      <div class="avatar" aria-label="头像">GH</div>
+      <!-- 若想用图片，替换上面这行为: 
+           <img class="avatar-img" src="https://github.com/identicons/gh.png" alt="Avatar"> 
+           这里为了方便展示使用纯CSS头像，但加注释说明 -->
+      
+      <div class="profile-info">
+        <h1 class="profile-name">GitHub 主页</h1>
+        <div class="profile-login">@mygithub</div>
+        <p class="profile-bio">
+          前端开发 / 开源爱好者。喜欢构建简洁实用的界面，正在学习 Rust 和 WebAssembly。
+        </p>
+        <div class="profile-meta">
+          <span>📍 中国 · 上海</span>
+          <span>🔗 <a href="#" style="color: #58a6ff; text-decoration: none;">myblog.dev</a></span>
+          <span>🐦 @mygithub</span>
+        </div>
+        <div class="profile-actions">
+          <a href="#" class="btn btn-follow">Follow</a>
+          <a href="#" class="btn btn-primary">Sponsor</a>
+          <a href="#" class="btn btn-primary">Email</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======= 标签导航 ======= -->
+    <nav class="nav-tabs">
+      <a href="#" class="nav-tab active">📄 Overview</a>
+      <a href="#" class="nav-tab">📁 Repositories <span class="counter">42</span></a>
+      <a href="#" class="nav-tab">📦 Projects</a>
+      <a href="#" class="nav-tab">📊 Insights</a>
+    </nav>
+
+    <!-- ======= 双栏主要内容 ======= -->
+    <div class="main-grid">
+      <!-- 左侧边栏 -->
+      <aside class="sidebar">
+        <!-- 组织/团队卡片 (简写) -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🏢 组织</span>
+          </div>
+          <div class="org-avatars">
+            <div class="org-avatar" title="Org1">O1</div>
+            <div class="org-avatar" title="Org2">O2</div>
+            <div class="org-avatar" title="Org3">O3</div>
+            <div class="org-avatar" title="Org4">O4</div>
+          </div>
+        </div>
+
+        <!-- 成就卡片 (类似 GitHub 的成就) -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🏆 成就</span>
+            <a href="#">查看全部</a>
+          </div>
+          <div class="achievements">
+            <div class="achievement-badge"><span class="badge-emoji">🥇</span> 首次 Pull Request</div>
+            <div class="achievement-badge"><span class="badge-emoji">⭐</span> 50 星标</div>
+            <div class="achievement-badge"><span class="badge-emoji">🐛</span> 100 Issue</div>
+          </div>
+        </div>
+
+        <!-- 贡献简表 (装饰用) -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📈 贡献</span>
+            <a href="#">过去一年</a>
+          </div>
+          <div class="contribution-graph">
+            <!-- 生成一些贡献块做展示，用动态 JavaScript 也可以，但静态写死一部分也行，为了简洁用 JS 生成 -->
+            <!-- 这里为了演示直接使用静态 HTML 但比较长，我们用一小段 JS 生成 -->
+          </div>
+          <div style="font-size: 12px; color: #8b949e; margin-top: 10px;">1,234 次贡献 · 过去一年</div>
+        </div>
+      </aside>
+
+      <!-- 右侧主内容区 -->
+      <main class="content-area">
+        <!-- 置顶仓库 (Pinned) -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📌 置顶仓库</span>
+            <a href="#">自定义</a>
+          </div>
+          <div class="repo-list">
+            <!-- 仓库 1 -->
+            <div class="repo-item">
+              <div class="repo-name"><a href="#">awesome-frontend</a></div>
+              <div class="repo-description">精选的前端资源、工具和库列表，适合开发者学习参考。</div>
+              <div class="repo-meta">
+                <span class="repo-language"><span class="language-color" style="background-color: #f1e05a;"></span> JavaScript</span>
+                <span class="repo-stars">⭐ 1.2k</span>
+                <span class="repo-forks">🍴 234</span>
+              </div>
+            </div>
+            <!-- 仓库 2 -->
+            <div class="repo-item">
+              <div class="repo-name"><a href="#">python-scripts</a></div>
+              <div class="repo-description">日常自动化脚本集合，包含文件处理、网络请求等。</div>
+              <div class="repo-meta">
+                <span class="repo-language"><span class="language-color python"></span> Python</span>
+                <span class="repo-stars">⭐ 342</span>
+                <span class="repo-forks">🍴 78</span>
+              </div>
+            </div>
+            <!-- 仓库 3 -->
+            <div class="repo-item">
+              <div class="repo-name"><a href="#">typescript-utils</a></div>
+              <div class="repo-description">实用的 TypeScript 工具函数库，零依赖，类型完整。</div>
+              <div class="repo-meta">
+                <span class="repo-language"><span class="language-color typescript"></span> TypeScript</span>
+                <span class="repo-stars">⭐ 892</span>
+                <span class="repo-forks">🍴 112</span>
+              </div>
+            </div>
+            <!-- 仓库 4 -->
+            <div class="repo-item">
+              <div class="repo-name"><a href="#">my-portfolio</a></div>
+              <div class="repo-description">个人作品集网站，使用 HTML、CSS 和少量 JavaScript 构建。</div>
+              <div class="repo-meta">
+                <span class="repo-language"><span class="language-color html"></span> HTML</span>
+                <span class="repo-stars">⭐ 56</span>
+                <span class="repo-forks">🍴 12</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 动态 / 活动贡献 (Contribution activity) -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📋 近期动态</span>
+            <a href="#">全部活动</a>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">📝</div>
+            <div>
+              <div class="activity-content">向 <a href="#">awesome-frontend</a> 提交了 3 个 commit</div>
+              <div class="activity-time">2 小时前</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">⭐</div>
+            <div>
+              <div class="activity-content">Star 了 <a href="#">vercel/next.js</a></div>
+              <div class="activity-time">昨天</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">🔀</div>
+            <div>
+              <div class="activity-content">合并了 PR #42 到 <a href="#">python-scripts</a></div>
+              <div class="activity-time">3 天前</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">🐛</div>
+            <div>
+              <div class="activity-content">在 <a href="#">typescript-utils</a> 中打开了 issue #12</div>
+              <div class="activity-time">1 周前</div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- 极简页脚 (模仿 GitHub 底部) -->
+    <footer style="margin-top: 8px; font-size: 12px; color: #8b949e; text-align: center; border-top: 1px solid #21262d; padding-top: 24px;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 8px;">
+        <a href="#" style="color: #58a6ff; text-decoration: none;">Terms</a>
+        <a href="#" style="color: #58a6ff; text-decoration: none;">Privacy</a>
+        <a href="#" style="color: #58a6ff; text-decoration: none;">Security</a>
+        <a href="#" style="color: #58a6ff; text-decoration: none;">Status</a>
+        <a href="#" style="color: #58a6ff; text-decoration: none;">Docs</a>
+      </div>
+      <div>© 2025 GitHub 风格主页 · 仅用于演示</div>
+    </footer>
+  </div>
+
+  <!-- 一小段 JavaScript 用于生成贡献图格子 (纯装饰，24x7 太多，就生成 7x12 简单示意) -->
+  <script>
+    (function generateContributionGraph() {
+      const container = document.querySelector('.contribution-graph');
+      if (!container) return;
+
+      // 清空并生成 7 行 x 18 列 共 126 个小格子 (一周7天，大约18周)
+      // 为了让视觉更像github，随机赋予不同的等级
+      const totalDays = 7 * 18; // 126
+      
+      for (let i = 0; i < totalDays; i++) {
+        const day = document.createElement('div');
+        day.className = 'contribution-day';
+        
+        // 随机等级 0-4，让图有高低变化，但大部分是0级(占多数)
+        const rand = Math.random();
+        let level = 0;
+        if (rand > 0.75) level = 4;      // 15% 概率
+        else if (rand > 0.55) level = 3; // 20% 概率
+        else if (rand > 0.35) level = 2; // 20% 概率
+        else if (rand > 0.20) level = 1; // 15% 概率
+        // 其余为0，不添加类
+        
+        if (level > 0) {
+          day.classList.add(`level-${level}`);
+        }
+        container.appendChild(day);
+      }
+    })();
+  </script>
+</body>
+</html>

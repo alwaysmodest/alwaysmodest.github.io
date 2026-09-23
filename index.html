@@ -64,9 +64,9 @@
 
     .links {
       display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
 
     .links a {
@@ -77,6 +77,10 @@
 
     .links a:hover {
       text-decoration: underline;
+    }
+
+    .links .scholar {
+      font-weight: 500;
     }
   </style>
 </head>
@@ -90,8 +94,9 @@
       研究方向：因果推断。
     </p>
     <div class="links">
-      <a href="https://github.com/yourname">GitHub</a>
-      <a href="mailto:you@example.com">Email</a>
+      <a class="scholar" href="https://scholar.google.com.hk/citations?user=FoE9ckcAAAAJ&hl=zh-CN" target="_blank">谷歌学术</a>
+      <a href="mailto:zongyuli@bjtu.edu.cn">zongyuli@bjtu.edu.cn</a>
+      <a href="mailto:gdutzongyuli@gmail.com">gdutzongyuli@gmail.com</a>
     </div>
   </div>
 </body>
